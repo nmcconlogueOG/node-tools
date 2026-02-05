@@ -2,14 +2,16 @@
 
 const fs = require("fs");
 const path = require("path");
-const { parse } = require("csv-parse/sync");
+const csvParser = require("csv-parser");
 
 function parseCsvFile(filePath) {
-  const content = fs.readFileSync(filePath, "utf-8");
-  return parse(content, {
-    columns: true,
-    skip_empty_lines: true,
-    trim: true,
+  return new Promise((resolve, reject) => {
+    const records = [];
+    fs.createReadStream(filePath)
+      .pipe(csvParser({ mapValues: ({ value }) => value.trim() }))
+      .on("data", (row) => records.push(row))
+      .on("end", () => resolve(records))
+      .on("error", reject);
   });
 }
 
@@ -51,7 +53,7 @@ async function main() {
 
   let records;
   try {
-    records = parseCsvFile(path.resolve(csvPath));
+    records = await parseCsvFile(path.resolve(csvPath));
   } catch (err) {
     console.error(`Error reading CSV file: ${err.message}`);
     process.exit(1);
