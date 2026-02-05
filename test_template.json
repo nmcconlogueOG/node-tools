@@ -1,0 +1,9 @@
+{
+  "user": {
+    "firstName": "{{name}}",
+    "email": "{{email}}"
+  },
+  "permissions": {
+    "role": "{{role}}"
+  }
+}
