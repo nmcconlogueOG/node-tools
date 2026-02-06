@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Node.js CLI utilities",
   "bin": {
-    "csv-curl": "./bin/csv-curl.js"
+    "csv-curl": "./bin/csv-curl.mjs"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

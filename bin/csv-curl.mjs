@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 
-const fs = require("fs");
-const path = require("path");
-const csvParser = require("csv-parser");
+import { createReadStream, readFileSync } from "fs";
+import { resolve } from "path";
+import csvParser from "csv-parser";
 
 function parseCsvFile(filePath) {
   return new Promise((resolve, reject) => {
     const records = [];
-    fs.createReadStream(filePath)
+    createReadStream(filePath)
       .pipe(csvParser({ mapValues: ({ value }) => value.trim() }))
       .on("data", (row) => records.push(row))
       .on("end", () => resolve(records))
@@ -53,7 +53,7 @@ async function main() {
 
   let records;
   try {
-    records = await parseCsvFile(path.resolve(csvPath));
+    records = await parseCsvFile(resolve(csvPath));
   } catch (err) {
     console.error(`Error reading CSV file: ${err.message}`);
     process.exit(1);
@@ -61,7 +61,7 @@ async function main() {
 
   let template;
   try {
-    const raw = fs.readFileSync(path.resolve(templatePath), "utf-8");
+    const raw = readFileSync(resolve(templatePath), "utf-8");
     template = JSON.parse(raw);
   } catch (err) {
     console.error(`Error reading template file: ${err.message}`);
